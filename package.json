@@ -20,9 +20,10 @@
     "testURL": "http://localhost"
   },
   "dependencies": {
+    "copy-to-clipboard": "^3.0.8",
     "js-beautify": "^1.8.8",
-    "react-copy-to-clipboard": "^5.0.1",
-    "react-element-to-jsx-string": "^14.0.2"
+    "react-element-to-jsx-string": "^14.0.2",
+    "@storybook/components": "^4.0.9"
   },
   "devDependencies": {
     "@babel/cli": "^7.1.2",
