@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import copy from 'copy-to-clipboard'
-import { ActionBar, ActionButton } from '@storybook/components';
+import { ActionBar, ActionButton } from '@storybook/components'
 import Prism from './prism'
 
 import globalStyle from './css'
