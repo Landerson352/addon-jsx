@@ -11,7 +11,7 @@
     "format": "prettier --no-semi --single-quote --trailing-comma all --tab-width 2 --bracket-spacing true --print-width 100 --write 'src/**/*.js'",
     "netlify": "build-storybook -c ./example/.storybook",
     "prepare": "yarn build",
-    "postinstall": "babel src --out-dir lib --ignore spec.js,test.js",
+    "postinstall": "npm build",
     "storybook": "start-storybook -p 9009 -c ./example/.storybook",
     "test": "yarn test:all",
     "test:all": "jest src",
