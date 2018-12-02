@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
-import CopyToClipboard from 'react-copy-to-clipboard'
+import copy from 'copy-to-clipboard'
+import { ActionBar, ActionButton, themes } from '@storybook/components'
+import ThemeProvider from '@emotion/provider'
 import Prism from './prism'
 
 import globalStyle from './css'
@@ -14,6 +16,7 @@ export default class JSX extends Component {
     props.ob({
       next: type => (type === 'jsx' ? this.onAddJSX.bind(this) : this.setCurrent.bind(this)),
     })
+    this.handleCopyClick = this.handleCopyClick.bind(this)
 
     this.state = {}
     this.stopListeningOnStory = () => this.setState({})
@@ -33,59 +36,56 @@ export default class JSX extends Component {
     this.setState(state)
   }
 
+  handleCopyClick() {
+    const { kind, story } = this.state.current
+    const code = this.state[kind][story] || ''
+    copy(code)
+  }
+
   render() {
     if (!this.props.active) return null
-    
+
+    let jsx = ''
+    let disabled = false
     if (
       typeof this.state.current !== 'undefined' &&
       typeof this.state[this.state.current.kind] !== 'undefined'
     ) {
       const current = this.state.current
       const code = this.state[current.kind][current.story]
-      const jsx = code ? Prism.highlight(code, Prism.languages.jsx) : ''
-
-      return (
-        <div style={styles.container}>
-          <CopyToClipboard style={styles.btn} text={code ? code : ''}>
-            <button>Copy</button>
-          </CopyToClipboard>
-          <pre style={styles.pre} dangerouslySetInnerHTML={{ __html: jsx }} />
-        </div>
-      )
+      if (code) {
+        jsx = Prism.highlight(code, Prism.languages.jsx)
+      } else {
+        disabled = true
+      }
     } else {
-      return (
-        <div style={styles.container}>
-          <CopyToClipboard style={styles.btn} text="" disabled>
-            <button>Copy</button>
-          </CopyToClipboard>
-          <pre style={styles.pre} />
-        </div>
-      )
+      disabled = true
     }
+
+    return (
+      <ThemeProvider theme={themes.normal}>
+        <div style={styles.container}>
+          <pre style={styles.pre} dangerouslySetInnerHTML={{ __html: jsx }} />
+          <ActionBar>
+            <ActionButton disabled={disabled}>COPY</ActionButton>
+          </ActionBar>
+        </div>
+      </ThemeProvider>
+    )
   }
 }
 
 const styles = {
   container: {
     flex: 1,
-    padding: '10px',
+    display: 'flex',
     position: 'relative',
-  },
-  btn: {
-    position: 'absolute',
-    bottom: 0,
-    right: 0,
-    border: 'none',
-    borderTop: 'solid 1px rgba(0, 0, 0, 0.2)',
-    borderLeft: 'solid 1px rgba(0, 0, 0, 0.2)',
-    background: 'rgba(255, 255, 255, 0.5)',
-    padding: '5px 10px',
-    borderRadius: '4px 0 0 0',
-    color: 'rgba(0, 0, 0, 0.5)',
-    textTransform: 'uppercase',
-    outline: 'none',
+    height: '100%',
+    backgroundColor: themes.normal.mainBackground,
   },
   pre: {
     flex: 1,
+    overflowY: 'auto',
+    padding: 10,
   },
 }
