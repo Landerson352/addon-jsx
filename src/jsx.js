@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import copy from 'copy-to-clipboard'
-import { ActionBar, ActionButton } from '@storybook/components'
+import { ActionBar, ActionButton, themes } from '@storybook/components'
+import ThemeProvider from '@emotion/provider'
 import Prism from './prism'
 
 import globalStyle from './css'
@@ -43,33 +44,34 @@ export default class JSX extends Component {
 
   render() {
     if (!this.props.active) return null
-    
+
+    let jsx = ''
+    let disabled = false
     if (
       typeof this.state.current !== 'undefined' &&
       typeof this.state[this.state.current.kind] !== 'undefined'
     ) {
       const current = this.state.current
       const code = this.state[current.kind][current.story]
-      const jsx = code ? Prism.highlight(code, Prism.languages.jsx) : ''
+      if (code) {
+        jsx = Prism.highlight(code, Prism.languages.jsx)
+      } else {
+        disabled = true
+      }
+    } else {
+      disabled = true
+    }
 
-      return (
+    return (
+      <ThemeProvider theme={themes.normal}>
         <div style={styles.container}>
           <pre style={styles.pre} dangerouslySetInnerHTML={{ __html: jsx }} />
           <ActionBar>
-            <ActionButton onClick={this.handleCopyClick}>COPY</ActionButton>
+            <ActionButton disabled={disabled}>COPY</ActionButton>
           </ActionBar>
         </div>
-      )
-    } else {
-      return (
-        <div style={styles.container}>
-          <pre style={styles.pre} />
-          <ActionBar>
-            <ActionButton disabled>COPY</ActionButton>
-          </ActionBar>
-        </div>
-      )
-    }
+      </ThemeProvider>
+    )
   }
 }
 
@@ -79,9 +81,11 @@ const styles = {
     display: 'flex',
     position: 'relative',
     height: '100%',
+    backgroundColor: themes.normal.mainBackground,
   },
   pre: {
     flex: 1,
-    padding: '10px',
+    overflowY: 'auto',
+    padding: 10,
   },
 }

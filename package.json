@@ -20,6 +20,7 @@
     "testURL": "http://localhost"
   },
   "dependencies": {
+    "@emotion/provider": "^0.11.2",
     "@storybook/components": "^4.0.9",
     "copy-to-clipboard": "^3.0.8",
     "js-beautify": "^1.8.8",
